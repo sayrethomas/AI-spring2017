@@ -18,9 +18,11 @@ public class Main {
             do
             {
                 if(game.getCurrentPlayer() == 'x'){
-                    System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty row and column to place your mark!");
+                    /*System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty row and column to place your mark!");
                     row = scan.nextInt()-1;
-                    col = scan.nextInt()-1;
+                    col = scan.nextInt()-1;*/
+                    row = opp.getRow(game);
+                    col = opp.getCol();
                 }
                 else{
                     row = opp.getRow(game);

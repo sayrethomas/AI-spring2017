@@ -6,7 +6,8 @@ public class MainGame {
 
     public MainGame() {
         board = new char[3][3];
-        currentPlayer = 'x';
+        if(Math.random() < 0.5)currentPlayer = 'x';
+        else currentPlayer = 'o';
         initializeBoard();
     }
 
@@ -105,65 +106,67 @@ public class MainGame {
     }
     
     private int blocker(){
-        if ((board[1][1] == 'x' && board[2][2] == 'x') || (board[0][1] == 'x' && board[0][2] == 'x') || (board[1][0] == 'x' && board[2][0] == 'x') && (board[0][0] == '-')){
-               return 1;
+        char opp = currentPlayer;
+        if(opp == 'o'){ opp = 'x';}
+        else opp = 'o';
+        if (((board[1][1] == opp && board[2][2] == opp) || (board[0][1] == opp && board[0][2] == opp) || (board[1][0] == opp && board[2][0] == opp)) && (board[0][0] == '-')){ 
+                return 1;
         }
-        else if ((board[0][0] == 'x' && board[0][2] == 'x') || (board[1][1] == 'x' && board[2][1] == 'x') && (board[0][1] == '-')){
-               return 2;
+        else if (((board[0][0] == opp && board[0][2] == opp) || (board[1][1] == opp && board[2][1] == opp)) && (board[0][1] == '-')){
+            return 2;
         }
-        else if ((board[1][1] == 'x' && board[2][0] == 'x') || (board[0][0] == 'x' && board[0][1] == 'x') || (board[1][2] == 'x' && board[2][2] == 'x') && (board[0][2] == '-')){
-            System.out.println("Check");   
+        else if (((board[1][1] == opp && board[2][0] == opp) || (board[0][0] == opp && board[0][1] == opp) || (board[1][2] == opp && board[2][2] == opp)) && (board[0][2] == '-')){   
             return 3;
         }
-        else if ((board[0][0] == 'x' && board[2][0] == 'x') || (board[1][1] == 'x' && board[1][2] == 'x') && (board[1][0] == '-')){
-            //System.out.println("test");
+        else if (((board[0][0] == opp && board[2][0] == opp) || (board[1][1] == opp && board[1][2] == opp)) && (board[1][0] == '-')){
                return 4;
         }
-        else if((board[0][0] == 'x' && board[2][2] == 'x') || (board[0][2] == 'x' && board[2][0] == 'x') || (board[0][1] == 'x' && board[2][1] == 'x')|| (board[1][2] == 'x' && board[1][0] == 'x') && (board[1][1] == '-')){
-               return 5;        
+        else if(((board[0][0] == opp && board[2][2] == opp) || (board[0][2] == opp && board[2][0] == opp) || (board[0][1] == opp && board[2][1] == opp)|| (board[1][2] == opp && board[1][0] == opp)) && (board[1][1] == '-')){  
+            return 5;        
         }
-        else if ((board[0][2] == 'x' && board[2][2] == 'x') || (board[1][1] == 'x' && board[1][0] == 'x') && (board[1][2] == '-')){
-               return 6;
+        else if (((board[0][2] == opp && board[2][2] == opp) || (board[1][1] == opp && board[1][0] == opp)) && (board[1][2] == '-')){
+            return 6;
         }
-        else if ((board[0][2] == 'x' && board[1][1] == 'x') || (board[0][0] == 'x' && board[1][0] == 'x') || (board[2][1] == 'x' && board[2][2] == 'x') && (board[2][0] == '-')){
-               return 7;
+        else if (((board[0][2] == opp && board[1][1] == opp) || (board[0][0] == opp && board[1][0] == opp) || (board[2][1] == opp && board[2][2] == opp)) && (board[2][0] == '-')){
+            return 7;
         }
-        else if ((board[2][0] == 'x' && board[2][2] == 'x') || (board[1][1] == 'x' && board[0][1] == 'x') && (board[2][1] == '-')){
-               return 8;
+        else if (((board[2][0] == opp && board[2][2] == opp) || (board[1][1] == opp && board[0][1] == opp)) && (board[2][1] == '-')){
+            return 8;
         }
-        else if ((board[0][0] == 'x' && board[1][1] == 'x') || (board[2][0] == 'x' && board[2][1] == 'x') || (board[0][2] == 'x' && board[1][2] == 'x') && (board[2][2] == '-')){
-               return 9;
+        else if (((board[0][0] == opp && board[1][1] == opp) || (board[2][0] == opp && board[2][1] == opp) || (board[0][2] == opp && board[1][2] == opp)) && (board[2][2] == '-')){ 
+            return 9;
         }
-        else
+        else{
             return 0;
+        }
     }
     
     private int winner(){
-        if ((board[1][1] == 'o' && board[2][2] == 'o') || (board[0][1] == 'o' && board[0][2] == 'o') || (board[1][0] == 'o' && board[2][0] == 'o') && (board[0][0] == '-')){
+        if (((board[1][1] == currentPlayer && board[2][2] == currentPlayer) || (board[0][1] == currentPlayer && board[0][2] == currentPlayer) || (board[1][0] == currentPlayer && board[2][0] == currentPlayer)) && (board[0][0] == '-')){
                return 1;
         }
-        else if ((board[0][0] == 'o' && board[0][2] == 'o') || (board[1][1] == 'o' && board[2][1] == 'o') && (board[0][1] == '-')){
+        else if (((board[0][0] == currentPlayer && board[0][2] == currentPlayer) || (board[1][1] == currentPlayer && board[2][1] == currentPlayer)) && (board[0][1] == '-')){
                return 2;
         }
-        else if ((board[1][1] == 'o' && board[2][0] == 'o') || (board[0][0] == 'o' && board[0][1] == 'o') || (board[1][2] == 'o' && board[2][2] == 'o') && (board[0][2] == '-')){
+        else if (((board[1][1] == currentPlayer && board[2][0] == currentPlayer) || (board[0][0] == currentPlayer && board[0][1] == currentPlayer) || (board[1][2] == currentPlayer && board[2][2] == currentPlayer)) && (board[0][2] == '-')){
                return 3;
         }
-        else if ((board[0][0] == 'o' && board[2][0] == 'o') || (board[1][1] == 'o' && board[1][2] == 'o') && (board[1][0] == '-')){
+        else if (((board[0][0] == currentPlayer && board[2][0] == currentPlayer) || (board[1][1] == currentPlayer && board[1][2] == currentPlayer)) && (board[1][0] == '-')){
                return 4;
         }
-        else if((board[0][0] == 'o' && board[2][2] == 'o') || (board[0][2] == 'o' && board[2][0] == 'o') || (board[0][1] == 'o' && board[2][1] == 'o')|| (board[1][2] == 'o' && board[1][0] == 'o') && (board[1][1] == '-')){
+        else if(((board[0][0] == currentPlayer && board[2][2] == currentPlayer) || (board[0][2] == currentPlayer && board[2][0] == currentPlayer) || (board[0][1] == currentPlayer && board[2][1] == currentPlayer)|| (board[1][2] == currentPlayer && board[1][0] == currentPlayer)) && (board[1][1] == '-')){
                return 5;        
         }
-        else if ((board[0][2] == 'o' && board[2][2] == 'o') || (board[1][1] == 'o' && board[1][0] == 'o') && (board[1][2] == '-')){
+        else if (((board[0][2] == currentPlayer && board[2][2] == currentPlayer) || (board[1][1] == currentPlayer && board[1][0] == currentPlayer)) && (board[1][2] == '-')){
                return 6;
         }
-        else if ((board[0][2] == 'o' && board[1][1] == 'o') || (board[0][0] == 'o' && board[1][0] == 'o') || (board[2][1] == 'o' && board[2][2] == 'o') && (board[2][0] == '-')){
+        else if (((board[0][2] == currentPlayer && board[1][1] == currentPlayer) || (board[0][0] == currentPlayer && board[1][0] == currentPlayer) || (board[2][1] == currentPlayer && board[2][2] == currentPlayer)) && (board[2][0] == '-')){
                return 7;
         }
-        else if ((board[2][0] == 'o' && board[2][2] == 'o') || (board[1][1] == 'o' && board[0][1] == 'o') && (board[2][1] == '-')){
+        else if (((board[2][0] == currentPlayer && board[2][2] == currentPlayer) || (board[1][1] == currentPlayer && board[0][1] == currentPlayer)) && (board[2][1] == '-')){
                return 8;
         }
-        else if ((board[0][0] == 'o' && board[1][1] == 'o') || (board[2][0] == 'o' && board[2][1] == 'o') || (board[0][2] == 'o' && board[1][2] == 'o') && (board[2][2] == '-')){
+        else if (((board[0][0] == currentPlayer && board[1][1] == currentPlayer) || (board[2][0] == currentPlayer && board[2][1] == currentPlayer) || (board[0][2] == currentPlayer && board[1][2] == currentPlayer)) && (board[2][2] == '-')){
                return 9;
         }
         else
@@ -239,7 +242,7 @@ public class MainGame {
                     break;
             case 9: location[0] = 2;
                     location[1] = 2;
-                    break;
+                    break;       
             default: location[0] = 3;
                      location[1] = 3;
                      break;
@@ -277,6 +280,21 @@ public class MainGame {
     public boolean isMark(int row, int col){
         if(board[row][col] != '-'){
             return true;
+        }
+        return false;
+    }
+    public boolean isLine(int row, int col){
+        for(int i = 0; i <= 2; i++){
+            for(int j = 0; j <= 2; j++){
+                if(board[row+i][col+j] == currentPlayer){
+                    return true;
+                }
+                else if(board[row-i][col-j] == currentPlayer){
+                    return true;
+                }
+                else
+                    return false;
+            }
         }
         return false;
     }
