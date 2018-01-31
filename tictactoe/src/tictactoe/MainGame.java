@@ -19,7 +19,16 @@ public class MainGame {
     {
         return currentPlayer;
     }
-
+    
+    //Gives us access to currentPlayerMark
+    public char getOtherPlayer()
+    {
+        char player;
+        if(currentPlayer == 'X')  player = 'O';
+        else player = 'X';
+        return player;
+    }
+    
     public char[] getCurrentBoard()
     {
         return board;
@@ -74,10 +83,10 @@ public class MainGame {
 
     // Returns true if there is a win, false otherwise.
     // This calls our other win check functions to check the entire board.
-    public boolean isWinner(char play) {
-        char player;
+    public boolean isWinner(char player) {
+       /* char player;
         if(play == 'X') player = 'O';
-        else player = 'X';
+        else player = 'X';*/
         boolean isWin = false;
         if(
                 (board[0] == player && board[1] == board[0] && board[2] == board[0]) ||
@@ -314,8 +323,8 @@ public class MainGame {
 
     boolean blocker(char opp) {
         char player;
-        if(opp == 'X') player = 'O';
-        else player = 'X';
+        if(opp == 'O') player = 'X';
+        else player = 'O';
         /*for(int i = 0; i < 7; i++){
             for(int j = 1; j < 3; j++){
                 if(board[i] == player && board[i+j] == board[i])
