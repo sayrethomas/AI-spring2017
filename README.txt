@@ -1,2 +1,2 @@
-Added TicTacToe Branch
-	pushed HW1 with intelligent agent
+TicTacToe with MiniMax alogrithm located in MiniMax branch
+	-Abstract Branch: Self Made 'intelligence' TTT Game
