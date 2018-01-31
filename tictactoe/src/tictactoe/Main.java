@@ -24,14 +24,10 @@ public class Main {
             do
             {
                 if(game.getCurrentPlayer() == 'X'){
-                   // System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty location 1-9!");
-                     mark = scan.nextInt()-1;
-                    //mark = minimax(game.getCurrentBoard(), 'X', 1000);
+                    System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty location 1-9!");
+                    mark = scan.nextInt()-1;
                 }
                 else{
-                    /*System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty location 1-9!");
-                    mark = scan.nextInt()-1;*/
-                    //System.out.println(game.getCurrentPlayer());
                     mark = minimax(game.getCurrentBoard());
                 }
                 
