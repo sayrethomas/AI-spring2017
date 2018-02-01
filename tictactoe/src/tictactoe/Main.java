@@ -28,7 +28,7 @@ public class Main {
                     mark = scan.nextInt()-1;
                 }
                 else{
-                    mark = minimax(game.getCurrentBoard());
+                    mark = minimax(game.getCurrentBoard(), 1);
                 }
                 
             }
@@ -53,13 +53,13 @@ public class Main {
         }
     }
 
-      private static int minimax(char[] board){
+      private static int minimax(char[] board, int depth){
             int bestMove = 0;
             int score = Integer.MAX_VALUE;
             for (int i = 0; i < 9; i++){
                 if(board[i] != '-') continue;
                 board[i] = 'O';
-                int temp = maxxer(board, 0);
+                int temp = maxxer(board, 0, depth);
                 if(temp < score){
                     score = temp;
                     bestMove = i;
@@ -69,39 +69,42 @@ public class Main {
             return bestMove;
       }
       
-    private static int maxxer(char[] board, int level) {
+    private static int maxxer(char[] board, int level, int depth) {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
-        //tempGame.printBoard();
+        tempGame.printBoard();
+        System.out.println(depth);
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
-        else if(tempGame.isBoardFull()) return 0;
+        else if(tempGame.isBoardFull() || depth >= 0) return 0;
         int min = Integer.MIN_VALUE;
         for (int i = 0; i < 9; i++){
             if(board[i] == '-'){
                 board[i] = 'X';
-                min = max(min, minner(board, level+1)-level);
+                min = max(min, minner(board, level+1, depth--)-level);
                 board[i] = '-';
             }
         }
         return min;
     }
 
-    private static int minner(char[] board, int level) {
+    private static int minner(char[] board, int level, int depth) {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
-        //tempGame.printBoard();
+        tempGame.printBoard();
+        System.out.println(depth);
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
-        else if(tempGame.isBoardFull()) return 0;
+        else if(tempGame.isBoardFull() || depth >= 0) return 0;
         int max = Integer.MAX_VALUE;
         for (int i = 0; i < 9; i++){
             if(board[i] == '-'){
                 board[i] = 'O';
-                max = min(max, maxxer(board, level+1)+level);
+                max = min(max, maxxer(board, level+1, depth--)+level);
                 board[i] = '-';
             }
         }
+        
         return max;
     }
             

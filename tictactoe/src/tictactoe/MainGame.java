@@ -100,6 +100,7 @@ public class MainGame {
                 ) isWin = true;
         return isWin;
     }
+    
 
     // Change player marks back and forth.
     public void changePlayer() {
