@@ -28,7 +28,7 @@ public class Main {
                     mark = scan.nextInt()-1;
                 }
                 else{
-                    mark = minimax(game.getCurrentBoard(), 1);
+                    mark = minimax(game.getCurrentBoard(), 0);
                 }
                 
             }
@@ -73,15 +73,15 @@ public class Main {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
         tempGame.printBoard();
-        System.out.println(depth);
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
-        else if(tempGame.isBoardFull() || depth >= 0) return 0;
+        else if(tempGame.isBoardFull() || depth <= 0) return 0;
         int min = Integer.MIN_VALUE;
+        depth = depth-1;
         for (int i = 0; i < 9; i++){
             if(board[i] == '-'){
                 board[i] = 'X';
-                min = max(min, minner(board, level+1, depth--)-level);
+                min = max(min, minner(board, level+1, depth)-level);
                 board[i] = '-';
             }
         }
@@ -92,15 +92,15 @@ public class Main {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
         tempGame.printBoard();
-        System.out.println(depth);
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
-        else if(tempGame.isBoardFull() || depth >= 0) return 0;
+        else if(tempGame.isBoardFull() || depth <= 0) return 0;
         int max = Integer.MAX_VALUE;
+        depth = depth-1;
         for (int i = 0; i < 9; i++){
             if(board[i] == '-'){
                 board[i] = 'O';
-                max = min(max, maxxer(board, level+1, depth--)+level);
+                max = min(max, maxxer(board, level+1, depth)+level);
                 board[i] = '-';
             }
         }
