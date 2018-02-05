@@ -2,14 +2,16 @@ package tictactoe;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 
 public class MainGame {
 
-    private char[] board;
+    private char[][] board;
+    int gameSize = 3;
     private char currentPlayer;
 
     public MainGame() {
-        board = new char[9];
+        board = new char[gameSize][gameSize];
         currentPlayer = 'X';
         initializeBoard();
     }
@@ -18,6 +20,11 @@ public class MainGame {
     public char getCurrentPlayer()
     {
         return currentPlayer;
+    }
+    
+    public int getGameSize()
+    {
+        return gameSize;
     }
     
     //Gives us access to currentPlayerMark
@@ -29,7 +36,7 @@ public class MainGame {
         return player;
     }
     
-    public char[] getCurrentBoard()
+    public char[][] getCurrentBoard()
     {
         return board;
     }
@@ -38,31 +45,42 @@ public class MainGame {
     public void initializeBoard() {
 
         // Loop through array
-        for (int i = 0; i < 9; i++){
-                board[i] = '-';
+        for (int i = 0; i < gameSize; i++){
+            for (int j = 0; j < gameSize; j++){
+                board[i][j] = '-';
             }
+        }
     }
-    public void makeBoard(char[] newBoard) {
+    public void makeBoard(char[][] newBoard) {
 
         // Loop through array
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i < gameSize; i++){
+            for(int j = 0; j< gameSize; j++){
                 board[i] = newBoard[i];
             }
+        }
     }
 
 
     // Print the current board (may be replaced by GUI implementation later)
     public void printBoard() {
-        System.out.println("-------------");
-        int count = 0;
-        for (int i = 0; i < 3; i++) {
-            System.out.print("| ");
-            for (int j = 0; j < 3; j++) {
-                System.out.print(board[count] + " | ");
-                count++;
+        String topline = "    ";
+        String line = "  -";
+        for (int i = 1; i < gameSize+1; i++){
+            topline += i + "   ";
+            line += "----";
+        }
+        System.out.println(topline);
+        System.out.println(line);
+        int count = 1;
+        for (int i = 0; i < gameSize; i++) {
+            System.out.print(count + " | ");
+            count++;
+            for (int j = 0; j < gameSize; j++) {
+                System.out.print(board[i][j] + " | ");
             }
             System.out.println();
-            System.out.println("-------------");
+            System.out.println(line);
         }
     }
 
@@ -72,10 +90,12 @@ public class MainGame {
     public boolean isBoardFull() {
         boolean isFull = true;
 
-        for (int i = 0; i < 9; i++) {
-                if (board[i] == '-') {
+        for (int i = 0; i < gameSize; i++) {
+            for (int j = 0; j < gameSize; j++) {
+                if (board[i][j] == '-') {
                     isFull = false;
                 }
+            }
         }
         return isFull;
     }
@@ -84,24 +104,55 @@ public class MainGame {
     // Returns true if there is a win, false otherwise.
     // This calls our other win check functions to check the entire board.
     public boolean isWinner(char player) {
-       /* char player;
-        if(play == 'X') player = 'O';
-        else player = 'X';*/
         boolean isWin = false;
-        if(
-                (board[0] == player && board[1] == board[0] && board[2] == board[0]) ||
-                (board[3] == player && board[4] == board[3] && board[5] == board[3]) ||
-                (board[6] == player && board[7] == board[6] && board[8] == board[6]) ||
-                (board[0] == player && board[3] == board[0] && board[6] == board[0]) ||
-                (board[1] == player && board[4] == board[1] && board[7] == board[1]) ||
-                (board[2] == player && board[5] == board[2] && board[8] == board[2]) ||
-                (board[0] == player && board[4] == board[0] && board[8] == board[0]) ||
-                (board[2] == player && board[4] == board[2] && board[6] == board[2])
-                ) isWin = true;
+        if(checkColumn(player) || checkRow(player) || checkDiagonal(player)) isWin = true;
         return isWin;
     }
     
+    private boolean checkColumn (char player){
+        boolean isCol = false;
+        for (int i = 0; i < gameSize; i++) {
+            for (int j = 0; j < gameSize; j++) {
+                if(i < gameSize-2){
+                if ((board[i][j] == player) && (board[i+1][j] == player) && (board[i+2][j] == player)) {
+                    isCol = true;}
+                }
+            }
+        }
+        return isCol;
+    }    
+    
+    private boolean checkRow (char player){
+        boolean isRow = false;
+        for (int i = 0; i < gameSize; i++) {
+            for (int j = 0; j < gameSize; j++) {
+                if(j < gameSize-2){
+                if ((board[i][j] == player) && (board[i][j+1] == player) && (board[i][j+2] == player)) {
+                    isRow = true;
+                }
+                }
+            }
+        }
+        return isRow;
+    }
 
+    private boolean checkDiagonal (char player){
+        boolean isDia = false;
+        for (int i = 0; i < gameSize; i++) {
+            for (int j = 0; j < gameSize; j++) {
+                if (i < gameSize-2 && j < gameSize-2 ){
+                if ((board[i][j] == player) && (board[i+1][j+1] == player) && (board[i+2][j+2] == player)) {
+                    isDia = true;}}
+                else if(i > gameSize-2 && j < gameSize-2){
+                    if ((board[i][j] == player) && (board[i-1][j+1] == player) && (board[i-2][j+2] == player)) {
+                        isDia = true;
+                    }
+                }
+            }
+        }
+        return isDia;
+    }
+    
     // Change player marks back and forth.
     public void changePlayer() {
         if (currentPlayer == 'X') {
@@ -113,37 +164,24 @@ public class MainGame {
     }
 
     // Places a mark at the cell specified by row and col with the mark of the current player.
-    public boolean placeMark(int mark) {
+    public boolean placeMark(Pair<Integer, Integer> mark) {
 
         // Make sure that row and column are in bounds of the board.
-        if ((mark >= 0) && (mark < 9)) {
-                if (board[mark] == '-') {
-                    board[mark] = currentPlayer;
+        if ((mark.getKey() >= 0) && (mark.getKey() < gameSize+1) && (mark.getValue() >= 0) && (mark.getValue() < gameSize+1)) {
+                if (board[mark.getKey()][mark.getValue()] == '-') {
+                    board[mark.getKey()][mark.getValue()] = currentPlayer;
                     return true;
                 }
         }
         return false;
     }
-    public void removeMark(int mark) {
+    public void removeMark(Pair<Integer, Integer> mark) {
 
-        board[mark] = '-';
+        board[mark.getKey()][mark.getValue()] = '-';
     }
     
-    public boolean isMark(int mark){
-        return board[mark] != '-';
+    public boolean isMark(Pair<Integer, Integer> mark){
+        return board[mark.getKey()][mark.getValue()] != '-';
     }
     
-    public ArrayList availableSpots(){
-        ArrayList<Integer> avail = new ArrayList<>();
-        for(int i = 0; i < 9; i++){
-            if(board[i] == '-'){
-                avail.add(i);
-            }
-        }
-        //System.out.println(avail.size());
-        return avail;
-    }
-
 }
-
-
