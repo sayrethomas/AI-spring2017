@@ -7,13 +7,25 @@ import javafx.util.Pair;
 public class MainGame {
 
     private char[][] board;
-    int gameSize = 3;
+    int gameSize = 3
+            ;
     private char currentPlayer;
+    private String id = "";
 
     public MainGame() {
         board = new char[gameSize][gameSize];
         currentPlayer = 'X';
         initializeBoard();
+    }
+    
+    public String getId(){
+        id = "";
+        for (int i = 0; i < gameSize; i++){
+            for (int j = 0; j < gameSize; j++){
+                id += board[i][j];
+            }
+        }
+        return id;
     }
 
     //Gives us access to currentPlayerMark

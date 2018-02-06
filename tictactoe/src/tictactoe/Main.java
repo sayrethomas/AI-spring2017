@@ -2,7 +2,9 @@ package tictactoe;
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import javafx.util.Pair;
 
@@ -13,18 +15,20 @@ public class Main {
     {
         Scanner scan = new Scanner(System.in);
         MainGame game = new MainGame();
-       // nonPlayer opp = new nonPlayer();
         game.initializeBoard();
-        
+        Map<String, Integer> cache = new HashMap<String, Integer>();
         System.out.println("Tic-Tac-Toe!");
         do
         {
+            //System.out.println(cache.size());
             System.out.println("Current board layout:");
             game.printBoard();
             int row, col;
+             
             Pair <Integer, Integer> mark;
             do
             {
+                
                 if(game.getCurrentPlayer() == 'X'){
                     System.out.println("Player " + game.getCurrentPlayer() + ", enter an empty location 1-9!");
                     row = scan.nextInt()-1;
@@ -32,12 +36,12 @@ public class Main {
                     mark = new Pair<Integer, Integer> (row, col);
                 }
                 else{
-                    mark = minimax(game.getCurrentBoard(), 1);
+                    mark = minimax(game.getCurrentBoard(), 3, cache);
                 }
                 
             }
             
-            while (!game.placeMark(mark));{      
+            while (!game.placeMark(mark));{  
             game.changePlayer();
             //System.out.println(minimax(game));
         }
@@ -47,6 +51,8 @@ public class Main {
         {
             game.printBoard();
             System.out.println("CATS GAME!");
+            cache.forEach((k, v)->System.out.println(k+" "+v));
+            System.out.println(cache.size());
         }
         else
         {
@@ -54,10 +60,11 @@ public class Main {
             game.printBoard();
             game.changePlayer();
             System.out.println(game.getCurrentPlayer() + " IS THE WINNER!");
+            System.out.println(cache.size());
         }
     }
 
-      private static Pair<Integer, Integer> minimax(char[][] board, int depth){
+      private static Pair<Integer, Integer> minimax(char[][] board, int depth, Map<String, Integer> cache){
             Pair<Integer, Integer> bestMove = new Pair<Integer, Integer> (0, 0);
             int score = Integer.MAX_VALUE;
             MainGame tempGame = new MainGame();
@@ -65,8 +72,9 @@ public class Main {
             for (int i = 0; i < tempGame.getGameSize(); i++){
                 for (int j = 0; j < tempGame.getGameSize(); j++){
                 if(board[i][j] != '-') continue;
+                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
                 board[i][j] = 'O';
-                int temp = maxxer(board, 0, depth);
+                int temp = maxxer(board, depth, cache);
                 if(temp < score){
                     score = temp;
                     bestMove = new Pair<Integer, Integer> (i, j);;
@@ -77,20 +85,21 @@ public class Main {
             return bestMove;
       }
       
-    private static int maxxer(char[][] board, int level, int depth) {
+    private static int maxxer(char[][] board, int depth, Map<String, Integer> cache) {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
-        //tempGame.printBoard();
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
         else if(tempGame.isBoardFull() || depth <= 0) return 0;
+        //else if(cache.containsKey(tempGame.getId())) {System.out.println("Trig Baby"); return cache.get(tempGame.getId());}
         int min = Integer.MIN_VALUE;
         depth = depth-1;
         for (int i = 0; i < tempGame.getGameSize(); i++){
             for (int j = 0; j < tempGame.getGameSize(); j++){
             if(board[i][j] == '-'){
                 board[i][j] = 'X';
-                min = max(min, minner(board, level+1, depth)-level);
+                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
+                min = max(min, minner(board, depth, cache));
                 board[i][j] = '-';
             }
             }
@@ -98,26 +107,54 @@ public class Main {
         return min;
     }
 
-    private static int minner(char[][] board, int level, int depth) {
+    private static int minner(char[][] board, int depth, Map<String, Integer> cache) {
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
-        //tempGame.printBoard();
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
         else if(tempGame.isBoardFull() || depth <= 0) return 0;
+        //else if(cache.containsKey(tempGame.getId())) {System.out.println("Trig Baby "+tempGame.getId() ); return cache.get(tempGame.getId());}
         int max = Integer.MAX_VALUE;
         depth = depth-1;
         for (int i = 0; i < tempGame.getGameSize(); i++){
             for (int j = 0; j < tempGame.getGameSize(); j++){
             if(board[i][j] == '-'){
                 board[i][j] = 'O';
-                max = min(max, maxxer(board, level+1, depth)+level);
+                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
+                max = min(max, maxxer(board, depth, cache));
                 board[i][j] = '-';
             }
             }
         }
         
         return max;
+    }
+    
+    private static void rotater(char[][] board, Map<String, Integer> cache){
+        MainGame tempGame = new MainGame();
+        tempGame.makeBoard(board);
+        for(int k = 0; k < 4; k++){
+           board = tempGame.getCurrentBoard();
+           char[][] newBoard = new char[tempGame.getGameSize()][tempGame.getGameSize()];
+           for (int i = 0; i < tempGame.getGameSize(); i++){
+                for (int j = 0; j < tempGame.getGameSize(); j++){
+                     newBoard[i][j] = board[j][(tempGame.getGameSize()-1)-i];
+                }
+            }
+            tempGame.makeBoard(newBoard);
+            //System.out.println(tempGame.getId());
+            //if (cache.contains(tempGame.getId())) System.out.println("Contained");
+            if (!cache.containsKey(tempGame.getId())) {
+                String id = tempGame.getId();
+                int score = 0;
+//                if(tempGame.getCurrentPlayer() == 'O'){
+//                    score = maxxer(newBoard, 9, cache);
+//                }
+//                else
+//                    score = minner(newBoard, 9, cache);
+                cache.put(id, score);
+            }
+        }
     }
             
 }
