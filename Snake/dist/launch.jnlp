@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="file:/C:/Users/sayre/projects/JAVA-project1/Snake/dist/" href="launch.jnlp" spec="1.0+">
+    <information>
+        <title>JavaSnake</title>
+        <vendor>sayre</vendor>
+        <homepage href=""/>
+        <description>JavaSnake</description>
+        <description kind="short">JavaSnake</description>
+    </information>
+    <update check="always"/>
+    <resources>
+        <j2se java-vm-args="-Djava.security.policy=applet.policy" version="1.8+"/>
+        <jar href="JavaSnake.jar" main="true"/>
+    <jar href="lib/sqlite-jdbc-3.19.3.jar"/>
+</resources>
+    <application-desc main-class="javasnake.createLog">
+    </application-desc>
+</jnlp>
