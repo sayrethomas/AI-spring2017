@@ -7,8 +7,7 @@ import javafx.util.Pair;
 public class MainGame {
 
     private char[][] board;
-    int gameSize = 3
-            ;
+    int gameSize = 3;
     private char currentPlayer;
     private String id = "";
 
@@ -117,55 +116,34 @@ public class MainGame {
     // This calls our other win check functions to check the entire board.
     public boolean isWinner(char player) {
         boolean isWin = false;
-        if(checkColumn(player) || checkRow(player) || checkDiagonal(player)) isWin = true;
-        return isWin;
-    }
-    
-    private boolean checkColumn (char player){
-        boolean isCol = false;
+        //if(checkColumn(player) || checkRow(player) || checkDiagonal(player)) isWin = true;
         for (int i = 0; i < gameSize; i++) {
             for (int j = 0; j < gameSize; j++) {
                 if(i < gameSize-2){
-                if ((board[i][j] == player) && (board[i+1][j] == player) && (board[i+2][j] == player)) {
-                    isCol = true;}
+                    if ((board[i][j] == player) && (board[i+1][j] == player) && (board[i+2][j] == player)) {
+                        isWin = true;
+                    }
                 }
-            }
-        }
-        return isCol;
-    }    
-    
-    private boolean checkRow (char player){
-        boolean isRow = false;
-        for (int i = 0; i < gameSize; i++) {
-            for (int j = 0; j < gameSize; j++) {
-                if(j < gameSize-2){
-                if ((board[i][j] == player) && (board[i][j+1] == player) && (board[i][j+2] == player)) {
-                    isRow = true;
+                if (j < gameSize-2){
+                    if ((board[i][j] == player) && (board[i][j+1] == player) && (board[i][j+2] == player)) {
+                        isWin = true;
+                    }
                 }
-                }
-            }
-        }
-        return isRow;
-    }
-
-    private boolean checkDiagonal (char player){
-        boolean isDia = false;
-        for (int i = 0; i < gameSize; i++) {
-            for (int j = 0; j < gameSize; j++) {
                 if (i < gameSize-2 && j < gameSize-2 ){
-                if ((board[i][j] == player) && (board[i+1][j+1] == player) && (board[i+2][j+2] == player)) {
-                    isDia = true;}}
-                else if(i > gameSize-2 && j < gameSize-2){
+                    if ((board[i][j] == player) && (board[i+1][j+1] == player) && (board[i+2][j+2] == player)) {
+                        isWin = true;
+                    }
+                }
+                if(i > gameSize-2 && j < gameSize-2){
                     if ((board[i][j] == player) && (board[i-1][j+1] == player) && (board[i-2][j+2] == player)) {
-                        isDia = true;
+                        isWin = true;
                     }
                 }
             }
         }
-        return isDia;
+        return isWin;
     }
     
-    // Change player marks back and forth.
     public void changePlayer() {
         if (currentPlayer == 'X') {
             currentPlayer = 'O';

@@ -36,7 +36,7 @@ public class Main {
                     mark = new Pair<Integer, Integer> (row, col);
                 }
                 else{
-                    mark = minimax(game.getCurrentBoard(), 3, cache);
+                    mark = minimax(game.getCurrentBoard(), 7, cache);
                 }
                 
             }
@@ -60,6 +60,7 @@ public class Main {
             game.printBoard();
             game.changePlayer();
             System.out.println(game.getCurrentPlayer() + " IS THE WINNER!");
+            cache.forEach((k, v)->System.out.println(k+" "+v));
             System.out.println(cache.size());
         }
     }
@@ -72,7 +73,7 @@ public class Main {
             for (int i = 0; i < tempGame.getGameSize(); i++){
                 for (int j = 0; j < tempGame.getGameSize(); j++){
                 if(board[i][j] != '-') continue;
-                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
+                //if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache, depth);
                 board[i][j] = 'O';
                 int temp = maxxer(board, depth, cache);
                 if(temp < score){
@@ -91,14 +92,14 @@ public class Main {
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
         else if(tempGame.isBoardFull() || depth <= 0) return 0;
-        //else if(cache.containsKey(tempGame.getId())) {System.out.println("Trig Baby"); return cache.get(tempGame.getId());}
+        //else if(cache.get(tempGame.getId()) != null && cache.get(tempGame.getId()) != 0) return cache.get(tempGame.getId());
         int min = Integer.MIN_VALUE;
         depth = depth-1;
         for (int i = 0; i < tempGame.getGameSize(); i++){
             for (int j = 0; j < tempGame.getGameSize(); j++){
             if(board[i][j] == '-'){
                 board[i][j] = 'X';
-                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
+                //if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache, depth);
                 min = max(min, minner(board, depth, cache));
                 board[i][j] = '-';
             }
@@ -113,14 +114,14 @@ public class Main {
         if(tempGame.isWinner('X')) return 10;
         else if(tempGame.isWinner('O')) return -10;
         else if(tempGame.isBoardFull() || depth <= 0) return 0;
-        //else if(cache.containsKey(tempGame.getId())) {System.out.println("Trig Baby "+tempGame.getId() ); return cache.get(tempGame.getId());}
+        //else if(cache.get(tempGame.getId()) != null && cache.get(tempGame.getId()) != 0) return cache.get(tempGame.getId());
         int max = Integer.MAX_VALUE;
         depth = depth-1;
         for (int i = 0; i < tempGame.getGameSize(); i++){
             for (int j = 0; j < tempGame.getGameSize(); j++){
             if(board[i][j] == '-'){
                 board[i][j] = 'O';
-                if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache);
+                //if(!cache.containsKey(tempGame.getId())) rotater(tempGame.getCurrentBoard(), cache, depth);
                 max = min(max, maxxer(board, depth, cache));
                 board[i][j] = '-';
             }
@@ -130,9 +131,14 @@ public class Main {
         return max;
     }
     
-    private static void rotater(char[][] board, Map<String, Integer> cache){
+    private static void rotater(char[][] board, Map<String, Integer> cache, int depth){
         MainGame tempGame = new MainGame();
         tempGame.makeBoard(board);
+        int score = 0;
+        if(tempGame.isWinner('X')) score = 10;
+        else if(tempGame.isWinner('O')) score = -10;
+        else if(tempGame.isBoardFull() || depth <= 0) score = 0;
+        //else if(!tempGame.isBoardFull()) score = huey(board);
         for(int k = 0; k < 4; k++){
            board = tempGame.getCurrentBoard();
            char[][] newBoard = new char[tempGame.getGameSize()][tempGame.getGameSize()];
@@ -146,15 +152,23 @@ public class Main {
             //if (cache.contains(tempGame.getId())) System.out.println("Contained");
             if (!cache.containsKey(tempGame.getId())) {
                 String id = tempGame.getId();
-                int score = 0;
-//                if(tempGame.getCurrentPlayer() == 'O'){
-//                    score = maxxer(newBoard, 9, cache);
-//                }
-//                else
-//                    score = minner(newBoard, 9, cache);
                 cache.put(id, score);
             }
         }
+    }
+
+    private static int huey(char[][] board) {
+        MainGame tempGame = new MainGame();
+        tempGame.makeBoard(board);
+        int ristic = 0;
+        for (int i = 0; i < tempGame.getGameSize(); i++){
+                for (int j = 0; j < tempGame.getGameSize(); j++){
+                    if(board[i][j] == 'X') ristic++;
+                    else ristic--;
+                }
+            }
+        System.out.println(ristic);
+        return ristic;
     }
             
 }
